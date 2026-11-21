@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="description" content="Kiddo — short videos, big fun. Watch, create and share." />
+    <title>Kiddo</title>
+    <script>
+      try {
+        const saved = localStorage.getItem('kiddo-theme');
+        const prefersLight = matchMedia('(prefers-color-scheme: light)').matches;
+        const dark = saved === 'dark' || (saved !== 'light' && !prefersLight);
+        document.documentElement.classList.toggle('dark', dark);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+        document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+      } catch {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

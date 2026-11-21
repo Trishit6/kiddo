@@ -1,0 +1,16 @@
+{
+  "streams": [
+    {
+      "codec_type": "video",
+      "codec_name": "hevc",
+      "width": 1920,
+      "height": 1080,
+      "duration": "8.000000",
+      "side_data_list": [{ "rotation": -90 }]
+    }
+  ],
+  "format": {
+    "duration": "8.000000",
+    "format_name": "mov,mp4,m4a,3gp,3g2,mj2"
+  }
+}

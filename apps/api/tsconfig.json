@@ -1,0 +1,10 @@
+{
+  "extends": "@reel/config/tsconfig.node.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@reel/shared": ["../../packages/shared/src/index.ts"]
+    }
+  },
+  "include": ["src", "drizzle.config.ts", "vitest.config.ts"]
+}

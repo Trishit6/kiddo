@@ -1,0 +1,120 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: reel
+      POSTGRES_PASSWORD: reel
+      POSTGRES_DB: reel
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U reel -d reel']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ['redis-server', '--appendonly', 'yes']
+    ports:
+      - '${REDIS_HOST_PORT:-6380}:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - '1025:1025'
+      - '8025:8025'
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://localhost:8025']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio:
+    # The official minio/minio and minio/mc Docker Hub repos were removed in 2026.
+    image: elestio/minio:latest
+    restart: unless-stopped
+    command: ['server', '/data', '--console-address', ':9001']
+    environment:
+      MINIO_ROOT_USER: reelminio
+      MINIO_ROOT_PASSWORD: reelminio123
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:9000/minio/health/live']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  minio-init:
+    # Provides the mc client needed to create the bucket, set CORS and allow
+    # public playback/thumbnail reads. Restrict the CORS origin in production.
+    image: insectai/minio:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    volumes:
+      - ./docker/minio/cors.json:/cors.json:ro
+    entrypoint:
+      - /bin/sh
+      - -c
+      - |
+        mc alias set local http://minio:9000 reelminio reelminio123 &&
+        mc mb --ignore-existing local/reel-videos &&
+        mc anonymous set download local/reel-videos &&
+        mc cors set local/reel-videos /cors.json &&
+        echo 'MinIO bucket reel-videos is ready'
+
+  worker:
+    # Opt-in worker image with ffmpeg. Run locally with:
+    #   docker compose --profile worker up -d --build
+    # or run `pnpm dev:worker` when ffmpeg is installed on the host.
+    profiles: ['worker']
+    build:
+      context: .
+      dockerfile: docker/worker/Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://reel:reel@postgres:5432/reel
+      REDIS_URL: redis://redis:6379/0
+      S3_ENDPOINT: http://minio:9000
+      S3_REGION: us-east-1
+      S3_ACCESS_KEY_ID: reelminio
+      S3_SECRET_ACCESS_KEY: reelminio123
+      S3_BUCKET: reel-videos
+      S3_PUBLIC_ENDPOINT: http://localhost:9000
+      S3_PUBLIC_BASE_URL: http://localhost:9000/reel-videos
+      MEDIA_PUBLIC_BASE_URL: http://localhost:9000/reel-videos
+      APP_URL: http://localhost:5173
+      FFMPEG_PATH: ffmpeg
+      FFPROBE_PATH: ffprobe
+      WORKER_CONCURRENCY: 2
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:

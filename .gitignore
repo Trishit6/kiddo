@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.expo/
+.expo-shared/
+android/
+ios/
+*.log
+.DS_Store
+.vscode/*
+!.vscode/extensions.json

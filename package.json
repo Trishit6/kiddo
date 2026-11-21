@@ -1,0 +1,51 @@
+{
+  "name": "reel-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "dev:app": "pnpm --parallel --filter @reel/api --filter @reel/web dev",
+    "dev:worker": "pnpm --filter @reel/api dev:worker",
+    "dev:mobile": "pnpm --filter @reel/mobile dev",
+    "build": "pnpm -r --if-present build",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "bench:feed": "node scripts/bench-feed.mjs",
+    "test": "pnpm -r --if-present test",
+    "db:generate": "pnpm --filter @reel/api db:generate",
+    "db:migrate": "pnpm --filter @reel/api db:migrate",
+    "db:seed": "pnpm --filter @reel/api db:seed",
+    "db:seed:load": "pnpm --filter @reel/api db:seed:load",
+    "prepare": "simple-git-hooks"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@reel/config": "workspace:*",
+    "autocannon": "^9.0.0",
+    "eslint": "^10.15.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.14.0",
+    "lint-staged": "^17.6.1",
+    "prettier": "^3.10.1",
+    "simple-git-hooks": "^2.14.0",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.73.0"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,mjs,cjs}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css,html}": "prettier --write"
+  }
+}

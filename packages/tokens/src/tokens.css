@@ -1,0 +1,85 @@
+/*
+ * Kiddo design tokens. CSS custom properties are the source of truth for web;
+ * packages/tokens/src/index.ts mirrors them for React Native, which has no
+ * CSS-variable support. Change both together.
+ */
+:root {
+  color-scheme: light;
+  --radius: 1rem;
+
+  --background: #f6f6fa;
+  --foreground: #20202b;
+  --card: #ffffff;
+  --card-foreground: #20202b;
+  --popover: #ffffff;
+  --popover-foreground: #20202b;
+  --primary: #7557f6;
+  --primary-foreground: #ffffff;
+  --secondary: #f0eff6;
+  --secondary-foreground: #20202b;
+  --muted: #f0eff6;
+  --muted-foreground: #777785;
+  --accent: #f0eff6;
+  --accent-foreground: #20202b;
+  --destructive: #ef5350;
+  --border: #e9e8f0;
+  --input: #e9e8f0;
+  --ring: #7557f6;
+  --brand: #7557f6;
+  --brand-foreground: #ffffff;
+  --brand-secondary: #9878ff;
+  --accent-pink: #ff5576;
+  --success: #19b99a;
+  --warning: #f4b64a;
+  --error: #ef5350;
+
+  /* Backward-compatible aliases used by existing components. */
+  --mint: var(--success);
+  --sun: var(--warning);
+
+  --glass-bg: rgb(255 255 255 / 72%);
+  --glass-bg-strong: rgb(255 255 255 / 88%);
+  --glass-border: rgb(255 255 255 / 78%);
+  --glass-shadow: 0 8px 32px rgb(32 32 43 / 8%);
+  --glass-blur: 18px;
+  --overlay-scrim: rgb(32 32 43 / 48%);
+}
+
+.dark {
+  color-scheme: dark;
+  --background: #111116;
+  --foreground: #f4f3f8;
+  --card: #191922;
+  --card-foreground: #f4f3f8;
+  --popover: #22222d;
+  --popover-foreground: #f4f3f8;
+  --primary: #9878ff;
+  --primary-foreground: #111116;
+  --secondary: #292936;
+  --secondary-foreground: #f4f3f8;
+  --muted: #22222d;
+  --muted-foreground: #a2a0af;
+  --accent: #292936;
+  --accent-foreground: #f4f3f8;
+  --destructive: #ef5350;
+  --border: #343441;
+  --input: #343441;
+  --ring: #9878ff;
+  --brand: #9878ff;
+  --brand-foreground: #111116;
+  --brand-secondary: #7557f6;
+  --accent-pink: #ff5576;
+  --success: #19b99a;
+  --warning: #f4b64a;
+  --error: #ef5350;
+
+  --mint: var(--success);
+  --sun: var(--warning);
+
+  --glass-bg: rgb(25 25 34 / 72%);
+  --glass-bg-strong: rgb(25 25 34 / 90%);
+  --glass-border: rgb(255 255 255 / 8%);
+  --glass-shadow: 0 12px 40px rgb(0 0 0 / 35%);
+  --glass-blur: 20px;
+  --overlay-scrim: rgb(0 0 0 / 60%);
+}

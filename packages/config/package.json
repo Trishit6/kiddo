@@ -1,0 +1,13 @@
+{
+  "name": "@reel/config",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "files": [
+    "eslint.config.js",
+    "prettier.config.js",
+    "tsconfig.base.json",
+    "tsconfig.node.json",
+    "tsconfig.web.json"
+  ]
+}

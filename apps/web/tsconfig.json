@@ -1,0 +1,12 @@
+{
+  "extends": "@reel/config/tsconfig.web.json",
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"],
+      "@reel/shared": ["../../packages/shared/src/index.ts"],
+      "@reel/queries": ["../../packages/queries/src/index.ts"]
+    },
+    "types": ["vite/client", "node", "google.accounts"]
+  },
+  "include": ["src", "vite.config.ts"]
+}

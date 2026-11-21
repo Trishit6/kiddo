@@ -1,0 +1,28 @@
+import type { CommentSort, FeedKind, NotificationFilter } from '@reel/shared';
+
+export const queryKeys = {
+  all: ['social'] as const,
+  feeds: ['social', 'feed'] as const,
+  feed: (kind: FeedKind) => ['social', 'feed', kind] as const,
+  profile: (username: string) => ['social', 'profile', username] as const,
+  profileVideos: (username: string) => ['social', 'profile', username, 'videos'] as const,
+  savedVideos: () => ['social', 'profile', 'me', 'saved'] as const,
+  likedVideos: () => ['social', 'profile', 'me', 'liked'] as const,
+  myVideos: () => ['social', 'me', 'videos'] as const,
+  hashtagVideos: (tag: string) => ['social', 'hashtag', tag] as const,
+  trending: () => ['social', 'trending'] as const,
+  video: (videoId: string) => ['social', 'video', videoId] as const,
+  videoStatus: (videoId: string) => ['social', 'video', videoId, 'status'] as const,
+  feedItem: (videoId: string) => ['social', 'video', videoId, 'feed-item'] as const,
+  comments: (videoId: string, sort: CommentSort) => ['social', 'comments', videoId, sort] as const,
+  commentLists: (videoId: string) => ['social', 'comments', videoId] as const,
+  replies: (commentId: string) => ['social', 'replies', commentId] as const,
+  followers: (username: string) => ['social', 'follows', username, 'followers'] as const,
+  following: (username: string) => ['social', 'follows', username, 'following'] as const,
+  notifications: (filter: NotificationFilter) => ['social', 'notifications', filter] as const,
+  unreadNotificationCount: () => ['social', 'notifications', 'unread-count'] as const,
+  searchSuggestions: (query: string) => ['social', 'search', 'suggestions', query] as const,
+  searchUsers: (query: string) => ['social', 'search', 'users', query] as const,
+  searchVideos: (query: string) => ['social', 'search', 'videos', query] as const,
+  searchHashtags: (query: string) => ['social', 'search', 'hashtags', query] as const,
+} as const;

@@ -1,0 +1,10 @@
+{
+  "extends": "@reel/config/tsconfig.web.json",
+  "compilerOptions": {
+    "types": ["vitest/globals"],
+    "paths": {
+      "@reel/shared": ["../shared/src/index.ts"]
+    }
+  },
+  "include": ["src"]
+}

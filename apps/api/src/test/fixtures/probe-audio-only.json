@@ -1,0 +1,12 @@
+{
+  "streams": [
+    {
+      "codec_type": "audio",
+      "codec_name": "aac"
+    }
+  ],
+  "format": {
+    "duration": "30.000000",
+    "format_name": "mp3"
+  }
+}

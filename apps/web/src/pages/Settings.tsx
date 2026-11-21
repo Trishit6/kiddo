@@ -101,7 +101,7 @@ export function Settings() {
   return (
     <ResponsiveContainer width="md" className="space-y-8">
       <header className="space-y-1">
-        <h1 className="font-display text-display font-bold">Settings</h1>
+        <h1 className="font-display text-3xl font-bold sm:text-display">Settings</h1>
         <p className="text-muted-foreground">Tune your profile, theme and sessions.</p>
       </header>
 
@@ -115,7 +115,7 @@ export function Settings() {
           <div className="space-y-1">
             <label
               htmlFor="avatar"
-              className="inline-flex h-9 cursor-pointer items-center rounded-md border border-input px-3 text-sm font-medium hover:bg-accent"
+              className="inline-flex min-h-11 cursor-pointer items-center rounded-md border border-input px-3 text-sm font-medium hover:bg-accent"
             >
               {uploading ? 'Uploading…' : 'Change avatar'}
             </label>

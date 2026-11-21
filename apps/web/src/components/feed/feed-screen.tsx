@@ -1,5 +1,13 @@
 import { useLikeVideo, useInfiniteFeed } from '@reel/queries';
-import { Compass, Keyboard, RefreshCw, Sparkles, Users } from 'lucide-react';
+import {
+  ChevronDown,
+  ChevronUp,
+  Compass,
+  Keyboard,
+  RefreshCw,
+  Sparkles,
+  Users,
+} from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { FeedKind } from '@reel/shared';
@@ -49,12 +57,12 @@ function readIndex(kind: FeedKind): number {
 
 function FeedTabs({ kind }: { kind: FeedKind }) {
   return (
-    <div className="pointer-events-auto inline-flex items-center gap-1 rounded-pill border border-white/15 bg-black/45 p-1 text-sm font-semibold text-white shadow-glass backdrop-blur-xl">
+    <div className="pointer-events-auto inline-flex items-center gap-1 rounded-full border border-white/15 bg-black/40 p-1 text-sm font-semibold text-white shadow-[0_18px_50px_rgb(3_10_7_/_45%)] backdrop-blur-xl">
       <Link
         to="/"
         aria-current={kind === 'for-you' ? 'page' : undefined}
         className={cn(
-          'inline-flex items-center gap-1.5 rounded-pill px-4 py-1.5 transition-colors',
+          'inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 transition-colors',
           kind === 'for-you' ? 'bg-brand text-brand-foreground' : 'text-white/80 hover:text-white',
         )}
       >
@@ -64,7 +72,7 @@ function FeedTabs({ kind }: { kind: FeedKind }) {
         to="/following"
         aria-current={kind === 'following' ? 'page' : undefined}
         className={cn(
-          'inline-flex items-center gap-1.5 rounded-pill px-4 py-1.5 transition-colors',
+          'inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 transition-colors',
           kind === 'following'
             ? 'bg-brand text-brand-foreground'
             : 'text-white/80 hover:text-white',
@@ -266,9 +274,9 @@ export function FeedScreen({ kind }: { kind: FeedKind }) {
 
   if (query.isPending || (!enabled && requireAuth)) {
     return (
-      <div className="relative h-full w-full bg-black md:flex md:items-center md:justify-center md:py-4">
-        <div className="mx-auto h-full w-full space-y-3 bg-muted p-4 md:h-[calc(100dvh-2rem)] md:w-[calc((100dvh-2rem)*9/16)] md:rounded-2xl">
-          <Skeleton className="h-full w-full bg-white/5 md:rounded-2xl" />
+      <div className="relative h-full w-full bg-black/40 md:flex md:items-center md:justify-center md:p-4">
+        <div className="mx-auto h-full w-full bg-muted md:aspect-[9/16] md:h-full md:w-auto md:overflow-hidden md:rounded-[1.5rem]">
+          <Skeleton className="h-full w-full bg-white/5 md:rounded-[1.5rem]" />
         </div>
       </div>
     );
@@ -311,9 +319,33 @@ export function FeedScreen({ kind }: { kind: FeedKind }) {
   }
 
   return (
-    <div className="relative h-full w-full overflow-hidden bg-black">
+    <div className="relative h-full w-full overflow-hidden bg-black md:bg-black/40">
+      <p className="sr-only" aria-live="polite">
+        Video {activeIndex + 1} of {items.length}
+      </p>
       <div className="pointer-events-none absolute inset-x-0 top-0 z-30 flex justify-center pt-4 md:pt-6">
         <FeedTabs kind={kind} />
+      </div>
+
+      <div className="absolute right-4 top-1/2 z-30 hidden -translate-y-1/2 flex-col gap-2 md:flex">
+        <button
+          type="button"
+          onClick={() => goTo(activeIndex - 1)}
+          disabled={activeIndex === 0}
+          aria-label="Previous video"
+          className="grid size-11 place-items-center rounded-full border border-white/15 bg-black/40 text-white shadow-glass backdrop-blur-xl transition-colors hover:bg-black/60 disabled:cursor-not-allowed disabled:opacity-35"
+        >
+          <ChevronUp className="size-5" aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          onClick={() => goTo(activeIndex + 1)}
+          disabled={activeIndex >= items.length - 1}
+          aria-label="Next video"
+          className="grid size-11 place-items-center rounded-full border border-white/15 bg-black/40 text-white shadow-glass backdrop-blur-xl transition-colors hover:bg-black/60 disabled:cursor-not-allowed disabled:opacity-35"
+        >
+          <ChevronDown className="size-5" aria-hidden="true" />
+        </button>
       </div>
 
       <button

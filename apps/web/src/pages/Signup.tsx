@@ -8,6 +8,7 @@ import { AuthFooter, AuthShell } from '@/components/auth-shell';
 import { useAuth } from '@/components/auth-provider';
 import { GoogleSignInButton } from '@/components/google-sign-in-button';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   Form,
   FormControl,
@@ -110,16 +111,29 @@ export function Signup() {
             )}
           />
           {error ? (
-            <p role="alert" className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive">
+            <p
+              role="alert"
+              className={cn(
+                'rounded-xl bg-destructive/10 p-3 text-sm',
+                'dark:text-destructive',
+                'light:text-destructive-foreground',
+              )}
+            >
+              {' '}
               {error}
             </p>
           ) : null}
-          <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+          <Button
+            type="submit"
+            className={cn('w-full', 'dark:bg-brand', 'light:bg-primary')}
+            disabled={form.formState.isSubmitting}
+          >
             {form.formState.isSubmitting ? 'Creating account…' : 'Sign up'}
           </Button>
         </form>
       </Form>
-      <div className="mt-6">
+      <div className={cn('mt-6', 'dark:bg-glass-bg/20', 'light:bg-background')}>
+        {' '}
         <GoogleSignInButton onCredential={google} />
       </div>
     </AuthShell>

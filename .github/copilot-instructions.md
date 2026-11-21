@@ -1,5 +1,12 @@
 # Reel/Kiddo repository instructions
 
+## Instruction precedence
+
+- Follow `AGENTS.md` for repository-specific mandatory rules. Nested `AGENTS.md` files override or supplement the root guidance for files below them.
+- Before editing, inspect `git status --short` and preserve unrelated or pre-existing worktree changes.
+- Check `README.md`, `knowledge.md`, and `docs/performance.md` for feature and performance context; source code wins if documentation is stale.
+- `@reel/shared`, `@reel/queries`, `@reel/tokens`, the API route schemas, and the database schema are source-of-truth surfaces. Keep platform implementations in sync when a shared contract or cache behavior changes.
+
 ## Toolchain and setup
 
 - Use Node 24 (`.nvmrc`) and pnpm 11.25.0 (`packageManager` in `package.json`; run `corepack enable`).
@@ -45,6 +52,15 @@ pnpm --filter @reel/web test src/components/auth-gate.test.tsx
 pnpm --filter @reel/queries test src/optimistic.test.ts
 pnpm --filter @reel/mobile test src/lib/deep-links.test.ts
 ```
+
+Other targeted commands:
+
+- API test file: `pnpm --filter @reel/api test src/features/social.test.ts`
+- Web test file: `pnpm --filter @reel/web test src/components/feed/action-rail.test.tsx`
+- Queries test file: `pnpm --filter @reel/queries test src/optimistic.test.ts`
+- Mobile test file: `pnpm --filter @reel/mobile test src/components/feed/action-rail.test.tsx`
+- Mobile workspace lint: `pnpm --filter @reel/mobile lint`
+- Mobile Maestro E2E: `pnpm --filter @reel/mobile test:e2e`
 
 Mobile tests use Jest via `apps/mobile/package.json`; web and API tests use Vitest.
 
@@ -93,6 +109,17 @@ The shared contract flow is:
 
 `@reel/shared`, `@reel/queries`, and `@reel/tokens` are consumed as TypeScript source without build steps.
 
+The normal contract flow is:
+
+1. API feature routes import Zod 4 schemas and inferred types from `@reel/shared`.
+2. Shared contracts live in `packages/shared/src/schemas/<domain>.ts`, are re-exported from `packages/shared/src/index.ts`, and are implemented by `packages/shared/src/client.ts`.
+3. TanStack Query hooks live in `packages/queries/src/hooks.ts`; use shared query keys and cache helpers rather than app-local API fetches.
+4. Web and mobile consume the shared hooks and typed client. Do not call `fetch` or API endpoints directly from UI components.
+
+The API assembly starts in `apps/api/src/app.ts`; domain route plugins are registered there. Cross-cutting behavior belongs in `apps/api/src/plugins/`, reusable data visibility in `apps/api/src/lib/visibility.ts`, and keyset cursor logic in `apps/api/src/lib/cursor.ts`.
+
+The web route shell is `apps/web/src/App.tsx`; routes are lazy-loaded and composed under `AppShell`. The For You and Following screens share `apps/web/src/components/feed/feed-screen.tsx`. The mobile feed is in `apps/mobile/src/components/feed/feed-screen.tsx` and its tab route is in Expo Router.
+
 ## API conventions
 
 - Use Zod 4 and `fastify-type-provider-zod` v7. Every route declares request and response schemas for validation and Swagger generation.
@@ -103,6 +130,9 @@ The shared contract flow is:
 - List visibility, counters and social mutations must preserve their existing transactional and idempotency behavior.
 - For You sessions are Redis-backed and stable for later pages. Do not bypass the existing session/ranking/visibility flow.
 - Edit `apps/api/src/db/schema.ts`, generate the migration, apply it locally, and commit the generated `apps/api/drizzle/` changes. Never edit old migration SQL.
+- The For You endpoint builds a 200-video Redis session (30-minute TTL). Keep cursor pagination stable by preserving session IDs and offsets; do not replace it with ad-hoc offset pagination.
+- Candidate generation, filtering, ranking, and session logic belong in `apps/api/src/feed/`; social mutations belong in the existing feature route and interaction plugins.
+- List/count mutations must retain idempotency and transactional behavior. Preserve existing viewer state hydration and soft-delete semantics.
 
 ## Authentication and client state
 
@@ -112,6 +142,7 @@ The shared contract flow is:
 - Cross-origin cookie writes are rejected for browser sessions.
 - Web API setup lives in `apps/web/src/lib/api.ts`; mobile API setup lives in `apps/mobile/src/lib/api.ts`.
 - TanStack Query defaults and provider setup are in `apps/web/src/App.tsx` and `apps/mobile/app/_layout.tsx`. Shared query keys live in `packages/queries/src/keys.ts`; optimistic cache rules live in `packages/queries/src/optimistic.ts`.
+- Shared auth-required interaction handling lives in `packages/queries/src/hooks.ts`. Preserve the existing sign-in retry flow instead of adding app-local authenticated fetch logic.
 
 ## Web conventions
 
@@ -130,6 +161,8 @@ The shared contract flow is:
 - Theme preference and system-theme resolution are implemented in `apps/mobile/src/theme/theme-provider.tsx`; persistence uses AsyncStorage.
 - Keep `ExpoVideo`/`expo-video`, HLS behavior, safe areas, keyboard handling, gesture handling and bottom sheets in their existing platform-native implementations.
 - Limit the active mobile feed player window to three items and pause/clean up off-screen videos.
+- `apps/mobile/src/components/feed/feed-item.tsx` owns Expo Video playback/resource behavior. Preserve `shouldMountPlayer` windowing and the three-player limit; do not create another playback implementation.
+- Keep mobile navigation, safe-area handling, secure token storage, and bottom sheets in their existing components.
 
 ## Data and media behavior
 
@@ -138,3 +171,5 @@ The shared contract flow is:
 - Upload and processing states must reflect real backend status. Do not fabricate progress or present a failed/uploading video as ready.
 - Preserve view dedupe, visibility checks, keyset pagination and existing indexed query paths.
 - Performance-sensitive query and index changes should be checked against `docs/performance.md`.
+- Use real upload/processing statuses and real backend media. Do not present uploading, processing, deleted, or unavailable videos as ready.
+- Web HLS is handled in `apps/web/src/components/feed/feed-player.tsx`; hls.js is lazy-loaded and native HLS remains supported. Preserve active-item-only playback, visibility pausing, cleanup, and the existing resource/window behavior.

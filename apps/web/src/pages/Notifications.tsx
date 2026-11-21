@@ -131,8 +131,8 @@ export function Notifications() {
           <p className="text-label font-semibold uppercase tracking-widest text-brand">
             Your activity
           </p>
-          <h1 className="flex items-center gap-3 font-display text-display font-bold tracking-tight">
-            <Bell className="size-7 text-brand" aria-hidden="true" />
+          <h1 className="flex items-center gap-2.5 font-display text-3xl font-bold tracking-tight sm:text-display">
+            <Bell className="size-6 shrink-0 text-brand sm:size-7" aria-hidden="true" />
             Notifications
           </h1>
           {unread.data ? (

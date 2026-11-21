@@ -6,6 +6,7 @@ import { resendVerificationRequestSchema, verifyEmailRequestSchema } from '@reel
 import type { ResendVerificationRequest, VerifyEmailRequest } from '@reel/shared';
 import { AuthShell } from '@/components/auth-shell';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   Form,
   FormControl,
@@ -81,13 +82,17 @@ export function VerifyEmail() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" disabled={verifyForm.formState.isSubmitting}>
+          <Button
+            type="submit"
+            className={cn('w-full', 'dark:bg-brand', 'light:bg-primary')}
+            disabled={verifyForm.formState.isSubmitting}
+          >
             Verify email
           </Button>
         </form>
       </Form>
 
-      <div className="my-6 h-px bg-border" />
+      <div className={cn('my-6', 'dark:border-glass-border', 'light:border-border')} />
 
       <Form {...resendForm}>
         <form onSubmit={resend} className="space-y-4" noValidate>
@@ -106,8 +111,14 @@ export function VerifyEmail() {
           />
           <Button
             type="submit"
+            className={cn(
+              'w-full',
+              'dark:border-brand',
+              'light:border-primary',
+              'dark:bg-transparent',
+              'light:bg-background',
+            )}
             variant="outline"
-            className="w-full"
             disabled={resendForm.formState.isSubmitting}
           >
             Resend verification
@@ -115,7 +126,11 @@ export function VerifyEmail() {
         </form>
       </Form>
 
-      {message ? <p className="mt-4 text-sm text-success">{message}</p> : null}
+      {message ? (
+        <p className={cn('mt-4 text-sm', 'dark:text-brand-foreground', 'light:text-success')}>
+          {message}
+        </p>
+      ) : null}
       {error ? (
         <p role="alert" className="mt-4 rounded-xl bg-destructive/10 p-3 text-sm text-destructive">
           {error}

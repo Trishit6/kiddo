@@ -149,7 +149,8 @@ function OwnerUploads() {
 }
 
 export function Profile() {
-  const { username = '' } = useParams();
+  const { handle = '' } = useParams();
+  const username = handle.startsWith('@') ? handle.slice(1) : handle;
   const { user: viewer } = useAuth();
   const profile = usePublicProfile(username);
   const videos = useProfileVideos(username);
@@ -199,22 +200,22 @@ export function Profile() {
         <header className="flex flex-col gap-4 sm:flex-row sm:items-start">
           <Avatar src={user.avatarUrl} name={user.displayName} size="xl" />
           <div className="min-w-0 flex-1 space-y-3">
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
               <div className="min-w-0">
-                <h1 className="truncate font-display text-display font-bold leading-none">
+                <h1 className="truncate font-display text-4xl font-bold leading-none sm:text-display">
                   {user.displayName}
                 </h1>
                 <p className="mt-1 text-sm text-muted-foreground">@{user.username}</p>
               </div>
-              <div className="ml-auto flex shrink-0 gap-2">
+              <div className="flex w-full shrink-0 gap-2 sm:ml-auto sm:w-auto">
                 {isOwner ? (
                   <>
-                    <Button asChild variant="outline" size="sm">
+                    <Button asChild variant="outline" size="sm" className="flex-1 sm:flex-none">
                       <Link to="/settings">
                         <Pencil aria-hidden="true" /> Edit profile
                       </Link>
                     </Button>
-                    <Button asChild size="sm">
+                    <Button asChild size="sm" className="flex-1 sm:flex-none">
                       <Link to="/upload">Upload</Link>
                     </Button>
                   </>
@@ -224,6 +225,7 @@ export function Profile() {
                     displayName={user.displayName}
                     following={viewerState.following}
                     size="default"
+                    className="w-full sm:w-auto"
                   />
                 )}
               </div>

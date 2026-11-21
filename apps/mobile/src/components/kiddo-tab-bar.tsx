@@ -34,7 +34,7 @@ export function KiddoTabBar({ state, descriptors, emitter, navigateToTab }: Bott
         {
           height: layout.tabBarHeight + insets.bottom,
           paddingBottom: insets.bottom,
-          backgroundColor: overlay ? 'rgba(4, 3, 8, 0.28)' : colors.card,
+          backgroundColor: overlay ? 'rgba(6, 12, 9, 0.34)' : colors.card,
           borderTopColor: overlay ? 'transparent' : colors.border,
           borderTopWidth: overlay ? 0 : StyleSheet.hairlineWidth,
         },

@@ -163,6 +163,12 @@ export function FeedPlayer({
 
   return (
     <div className={cn('group absolute inset-0 overflow-hidden bg-black', className)}>
+      <img
+        src={poster}
+        alt=""
+        aria-hidden="true"
+        className="absolute inset-0 size-full object-cover md:object-contain"
+      />
       <video
         ref={videoRef}
         poster={poster}
@@ -179,7 +185,7 @@ export function FeedPlayer({
         onEnded={onEnded}
         onError={() => setFailed(true)}
         aria-label="Video"
-        className="size-full object-cover md:object-contain"
+        className="relative size-full object-cover md:object-contain"
       />
 
       {buffering && !failed ? (

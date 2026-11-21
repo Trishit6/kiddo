@@ -229,7 +229,7 @@ export function Upload() {
     <ResponsiveContainer width="lg" className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_20rem]">
       <section className="space-y-6">
         <header className="space-y-1">
-          <h1 className="font-display text-display font-bold">Upload a video</h1>
+          <h1 className="font-display text-3xl font-bold sm:text-display">Upload a video</h1>
           <p className="text-muted-foreground">
             Vertical videos up to {MAX_VIDEO_DURATION_SECONDS} seconds and {DEFAULT_MAX_VIDEO_MB}{' '}
             MB.
@@ -310,6 +310,9 @@ export function Upload() {
                 <Button type="button" variant="brand" onClick={() => inputRef.current?.click()}>
                   Choose file
                 </Button>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  Pick a video from your gallery or camera.
+                </p>
                 <input
                   ref={inputRef}
                   type="file"
@@ -325,14 +328,30 @@ export function Upload() {
                     src={previewUrl ?? undefined}
                     controls
                     playsInline
-                    className="h-40 w-24 rounded-lg bg-black object-contain"
+                    className="h-40 w-24 shrink-0 rounded-lg bg-black object-contain"
                   />
-                  <div className="min-w-0 flex-1 space-y-1">
-                    <p className="truncate font-medium">{file.name}</p>
+                  <div className="min-w-0 flex-1 space-y-2">
+                    <p className="break-words font-medium">{file.name}</p>
                     <p className="text-sm text-muted-foreground">
                       {(file.size / (1024 * 1024)).toFixed(1)} MB
                       {duration ? ` · ${duration.toFixed(0)}s` : ''}
                     </p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      className="px-2"
+                      disabled={busy}
+                      onClick={() => {
+                        if (previewUrl) URL.revokeObjectURL(previewUrl);
+                        setFile(null);
+                        setPreviewUrl(null);
+                        setDuration(null);
+                        if (inputRef.current) inputRef.current.value = '';
+                      }}
+                    >
+                      <X aria-hidden="true" /> Remove
+                    </Button>
                   </div>
                 </div>
 
@@ -421,6 +440,7 @@ export function Upload() {
                     variant="brand"
                     onClick={() => void startUpload()}
                     disabled={!duration}
+                    className="w-full sm:w-auto"
                   >
                     Upload video
                   </Button>

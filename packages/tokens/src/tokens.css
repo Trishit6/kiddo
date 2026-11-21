@@ -2,84 +2,130 @@
  * Kiddo design tokens. CSS custom properties are the source of truth for web;
  * packages/tokens/src/index.ts mirrors them for React Native, which has no
  * CSS-variable support. Change both together.
+ *
+ * Identity: a floating sage-green glass interface over charcoal. Surfaces are
+ * translucent, borders are thin and light, and the accent is a desaturated
+ * mint rather than a saturated neon.
  */
 :root {
   color-scheme: light;
-  --radius: 1rem;
+  --radius: 1.25rem;
 
-  --background: #f6f6fa;
-  --foreground: #20202b;
+  /* Breakpoints: sm 640 / md 768 / lg 1024 / xl 1280 / 2xl 1536. Declared in
+     apps/web/src/index.css @theme because media queries cannot read custom
+     properties. Keep packages/tokens/src/index.ts in sync. */
+
+  /* Shell geometry. Used by the web shell and mirrored in index.ts for native. */
+  --shell-max-width: 1720px;
+  --shell-gutter: 16px;
+  --shell-gutter-xl: 20px;
+  --sidebar-width: 272px;
+  --sidebar-compact-width: 76px;
+  --toolbar-height: 64px;
+  --mobile-header-height: 56px;
+  --mobile-nav-height: 70px;
+
+  /* Motion. Durations stay between 150 and 300 ms. */
+  --duration-fast: 150ms;
+  --duration-base: 220ms;
+  --duration-slow: 300ms;
+  --ease-standard: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-emphasized: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* Layering. Overlays sit above navigation; toasts above modals. */
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 30;
+  --z-nav: 40;
+  --z-overlay: 50;
+  --z-modal: 60;
+  --z-toast: 70;
+
+  --background: #edf2ee;
+  --background-deep: #e3ebe5;
+  --foreground: #202c25;
   --card: #ffffff;
-  --card-foreground: #20202b;
+  --card-foreground: #202c25;
   --popover: #ffffff;
-  --popover-foreground: #20202b;
-  --primary: #7557f6;
+  --popover-foreground: #202c25;
+  --primary: #477c5b;
   --primary-foreground: #ffffff;
-  --secondary: #f0eff6;
-  --secondary-foreground: #20202b;
-  --muted: #f0eff6;
-  --muted-foreground: #777785;
-  --accent: #f0eff6;
-  --accent-foreground: #20202b;
-  --destructive: #ef5350;
-  --border: #e9e8f0;
-  --input: #e9e8f0;
-  --ring: #7557f6;
-  --brand: #7557f6;
+  --secondary: #f2f7f3;
+  --secondary-foreground: #202c25;
+  --muted: #e9f0ea;
+  --muted-foreground: #68766d;
+  --accent: #e4eee7;
+  --accent-foreground: #202c25;
+  --destructive: #b44f45;
+  --border: rgb(57 83 65 / 13%);
+  --input: rgb(57 83 65 / 18%);
+  --ring: #477c5b;
+  --brand: #477c5b;
   --brand-foreground: #ffffff;
-  --brand-secondary: #9878ff;
-  --accent-pink: #ff5576;
-  --success: #19b99a;
-  --warning: #f4b64a;
-  --error: #ef5350;
+  --brand-secondary: #a9c9b2;
+  --accent-pink: #b98c81;
+  --success: #477c5b;
+  --warning: #b07f36;
+  --error: #b44f45;
 
   /* Backward-compatible aliases used by existing components. */
   --mint: var(--success);
   --sun: var(--warning);
 
-  --glass-bg: rgb(255 255 255 / 72%);
-  --glass-bg-strong: rgb(255 255 255 / 88%);
-  --glass-border: rgb(255 255 255 / 78%);
-  --glass-shadow: 0 8px 32px rgb(32 32 43 / 8%);
-  --glass-blur: 18px;
-  --overlay-scrim: rgb(32 32 43 / 48%);
+  --app-surface: rgb(255 255 255 / 72%);
+  --glass-bg: rgb(255 255 255 / 66%);
+  --glass-bg-strong: rgb(255 255 255 / 82%);
+  --glass-border: rgb(57 83 65 / 13%);
+  --glass-highlight: rgb(255 255 255 / 72%);
+  --glass-shadow: 0 24px 60px rgb(41 64 50 / 14%);
+  --glass-blur: 20px;
+  --overlay-scrim: rgb(32 44 37 / 48%);
+
+  --ambient-one: rgb(163 196 174 / 36%);
+  --ambient-two: rgb(201 218 205 / 48%);
 }
 
 .dark {
   color-scheme: dark;
-  --background: #111116;
-  --foreground: #f4f3f8;
-  --card: #191922;
-  --card-foreground: #f4f3f8;
-  --popover: #22222d;
-  --popover-foreground: #f4f3f8;
-  --primary: #9878ff;
-  --primary-foreground: #111116;
-  --secondary: #292936;
-  --secondary-foreground: #f4f3f8;
-  --muted: #22222d;
-  --muted-foreground: #a2a0af;
-  --accent: #292936;
-  --accent-foreground: #f4f3f8;
-  --destructive: #ef5350;
-  --border: #343441;
-  --input: #343441;
-  --ring: #9878ff;
-  --brand: #9878ff;
-  --brand-foreground: #111116;
-  --brand-secondary: #7557f6;
-  --accent-pink: #ff5576;
-  --success: #19b99a;
-  --warning: #f4b64a;
-  --error: #ef5350;
+  --background: #101916;
+  --background-deep: #0a120f;
+  --foreground: #f4f7f4;
+  --card: #1c2924;
+  --card-foreground: #f4f7f4;
+  --popover: #22312a;
+  --popover-foreground: #f4f7f4;
+  --primary: #9ccbb0;
+  --primary-foreground: #0e1a14;
+  --secondary: rgb(235 245 239 / 10%);
+  --secondary-foreground: #e7efe9;
+  --muted: rgb(235 245 239 / 7%);
+  --muted-foreground: #b3c1b8;
+  --accent: rgb(235 245 239 / 12%);
+  --accent-foreground: #f4f7f4;
+  --destructive: #e69086;
+  --border: rgb(255 255 255 / 16%);
+  --input: rgb(255 255 255 / 12%);
+  --ring: #9ccbb0;
+  --brand: #9ccbb0;
+  --brand-foreground: #0e1a14;
+  --brand-secondary: #d5e6d9;
+  --accent-pink: #c9a79d;
+  --success: #9ccbb0;
+  --warning: #e4c48f;
+  --error: #e69086;
 
   --mint: var(--success);
   --sun: var(--warning);
 
-  --glass-bg: rgb(25 25 34 / 72%);
-  --glass-bg-strong: rgb(25 25 34 / 90%);
-  --glass-border: rgb(255 255 255 / 8%);
-  --glass-shadow: 0 12px 40px rgb(0 0 0 / 35%);
-  --glass-blur: 20px;
-  --overlay-scrim: rgb(0 0 0 / 60%);
+  --app-surface: rgb(20 33 27 / 62%);
+  --glass-bg: rgb(224 239 230 / 9%);
+  --glass-bg-strong: rgb(235 245 239 / 13%);
+  --glass-border: rgb(255 255 255 / 16%);
+  --glass-highlight: rgb(255 255 255 / 10%);
+  --glass-shadow: 0 30px 80px rgb(3 10 7 / 45%);
+  --glass-blur: 22px;
+  --overlay-scrim: rgb(6 12 9 / 62%);
+
+  --ambient-one: rgb(76 118 92 / 34%);
+  --ambient-two: rgb(38 62 50 / 55%);
 }

@@ -146,7 +146,9 @@ export function Search() {
         <p className="text-label font-semibold uppercase tracking-widest text-brand">
           Find your next favorite
         </p>
-        <h1 className="font-display text-display font-bold tracking-tight">Search Kiddo</h1>
+        <h1 className="font-display text-4xl font-bold tracking-tight sm:text-display">
+          Search Kiddo
+        </h1>
         <p className="max-w-2xl text-sm text-muted-foreground sm:text-base">
           Look for creators, videos, and hashtags.
         </p>

@@ -47,6 +47,10 @@ export function FeedItem({
   const { track } = useViewTracker();
   const [bursts, setBursts] = useState<Burst[]>([]);
   const [captionExpanded, setCaptionExpanded] = useState(false);
+  const captionText = item.video.caption
+    .replace(/#[A-Za-z0-9_]+/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
   const clickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const watched = useRef({ max: 0, completed: false });
   const likedRef = useRef(item.viewerState.liked);
@@ -134,10 +138,17 @@ export function FeedItem({
       data-feed-slide
       data-index={index}
       aria-label={`Video by ${item.author.displayName}`}
-      className="feed-slide relative flex h-full w-full snap-center items-center justify-center overflow-hidden bg-black md:py-4"
+      className="feed-slide relative flex h-full w-full snap-center items-center justify-center overflow-hidden bg-black/60 md:py-4"
     >
+      {item.video.thumbnailUrl ? (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 hidden scale-110 bg-cover bg-center opacity-30 blur-3xl md:block"
+          style={{ backgroundImage: `url(${item.video.thumbnailUrl})` }}
+        />
+      ) : null}
       <div
-        className="relative h-full w-full overflow-hidden bg-black md:h-[calc(100dvh-2rem)] md:w-[calc((100dvh-2rem)*9/16)] md:max-w-[calc(100%-2rem)] md:rounded-2xl md:shadow-lift"
+        className="relative h-full w-full overflow-hidden bg-black md:aspect-[9/16] md:h-full md:w-auto md:max-w-full md:rounded-[1.5rem] md:shadow-lift"
         onDoubleClick={onDoubleClick}
         onClick={onAreaClick}
         role="presentation"
@@ -165,14 +176,14 @@ export function FeedItem({
             animate={{ opacity: 0, scale: 1.8, y: -30 }}
             transition={{ duration: 0.7, ease: 'easeOut' }}
             style={{ left: burst.x, top: burst.y }}
-            className="pointer-events-none absolute z-30 -translate-x-1/2 -translate-y-1/2 text-brand drop-shadow"
+            className="pointer-events-none absolute z-30 -translate-x-1/2 -translate-y-1/2 text-brand drop-shadow-[0_6px_18px_rgb(3_10_7_/_45%)]"
           >
             <Heart className="size-20 fill-current" />
           </motion.span>
         ))}
 
         <div
-          className="absolute inset-x-0 bottom-0 z-20 flex items-end justify-between gap-3 p-4 pb-16 md:pb-6"
+          className="absolute inset-x-0 bottom-0 z-20 flex items-end justify-between gap-3 p-4 pb-16 md:pb-14"
           onClick={(event) => event.stopPropagation()}
         >
           <div className="min-w-0 flex-1 space-y-1.5 text-white">
@@ -182,7 +193,7 @@ export function FeedItem({
             >
               @{item.author.username}
             </Link>
-            {item.video.caption ? (
+            {captionText ? (
               <div className="text-sm leading-snug">
                 <p
                   className={cn(
@@ -190,9 +201,9 @@ export function FeedItem({
                     !captionExpanded && 'line-clamp-2',
                   )}
                 >
-                  {item.video.caption}
+                  {captionText}
                 </p>
-                {item.video.caption.length > 110 ? (
+                {captionText.length > 110 ? (
                   <button
                     type="button"
                     onClick={(event) => {
@@ -226,7 +237,7 @@ export function FeedItem({
           <ActionRail item={item} onOpenComments={onOpenComments} className="shrink-0" />
         </div>
 
-        <div className="absolute inset-x-0 top-0 z-20 flex justify-end p-3 md:hidden">
+        <div className="absolute inset-x-0 top-0 z-20 flex justify-end px-3 pt-16 md:hidden">
           <button
             type="button"
             onClick={(event) => {

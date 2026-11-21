@@ -44,6 +44,20 @@ function cacheLikes(queryClient: QueryClient): number | undefined {
   return data?.pages[0]?.items[0]?.counts.likes;
 }
 
+function cacheSaveState(queryClient: QueryClient): boolean | undefined {
+  const data = queryClient.getQueryData<InfiniteData<FeedResponse, string | null>>(
+    queryKeys.feed('for-you'),
+  );
+  return data?.pages[0]?.items[0]?.viewerState.saved;
+}
+
+function cacheFollowState(queryClient: QueryClient): boolean | undefined {
+  const data = queryClient.getQueryData<InfiniteData<FeedResponse, string | null>>(
+    queryKeys.feed('for-you'),
+  );
+  return data?.pages[0]?.items[0]?.viewerState.followingAuthor;
+}
+
 describe('action rail like', () => {
   let queryClient: QueryClient;
   let rejectLike: (error: Error) => void;
@@ -121,5 +135,21 @@ describe('action rail like', () => {
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: /^Like, 5$/ }));
     await waitFor(() => expect(cacheLikes(queryClient)).toBe(4));
+  });
+
+  it('saves the video optimistically', async () => {
+    const user = userEvent.setup();
+    renderRail();
+
+    await user.click(screen.getByRole('button', { name: /^Save, 0$/ }));
+    await waitFor(() => expect(cacheSaveState(queryClient)).toBe(true));
+  });
+
+  it('follows the creator optimistically', async () => {
+    const user = userEvent.setup();
+    renderRail();
+
+    await user.click(screen.getByRole('button', { name: 'Follow Creator' }));
+    await waitFor(() => expect(cacheFollowState(queryClient)).toBe(true));
   });
 });

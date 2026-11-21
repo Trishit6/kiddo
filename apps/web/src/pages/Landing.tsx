@@ -1,4 +1,4 @@
-import { ArrowRight, Heart, Play, Sparkles, UploadCloud } from 'lucide-react';
+import { ArrowRight, Heart, Sparkles, UploadCloud } from 'lucide-react';
 import { motion } from 'motion/react';
 import { Link } from 'react-router-dom';
 import { useTrending } from '@reel/queries';
@@ -34,7 +34,7 @@ export function Landing() {
 
   return (
     <div className="min-h-dvh">
-      <header className="glass-nav sticky top-0 z-30 flex h-16 items-center justify-between px-4 sm:px-6">
+      <header className="glass-nav sticky top-0 z-30 flex h-16 items-center justify-between border-x-0 border-t-0 px-4 sm:px-6">
         <Logo />
         <div className="flex items-center gap-2">
           <ThemeToggle />
@@ -49,10 +49,10 @@ export function Landing() {
 
       <main>
         <section className="relative overflow-hidden px-4 pb-16 pt-16 sm:px-6 md:pt-24">
-          <div aria-hidden="true" className="absolute inset-0 -z-10">
-            <div className="absolute left-[8%] top-[10%] size-96 rounded-full bg-brand/20 blur-3xl" />
-            <div className="absolute right-[6%] top-[28%] size-80 rounded-full bg-accent-pink/15 blur-3xl" />
-          </div>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0 -z-10 bg-gradient-to-b from-muted/20 via-background to-background"
+          />
           <ResponsiveContainer
             width="xl"
             className="grid items-center gap-12 py-0 lg:grid-cols-[1.05fr_0.95fr]"
@@ -66,7 +66,7 @@ export function Landing() {
                 <Sparkles className="size-3.5" aria-hidden="true" />
                 Short video, long connections
               </GlassPill>
-              <h1 className="mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl">
+              <h1 className="mt-6 font-display text-4xl font-bold leading-[1.04] tracking-[-0.035em] sm:text-6xl">
                 Make every moment <span className="text-brand">worth replaying.</span>
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
@@ -94,7 +94,10 @@ export function Landing() {
               transition={{ duration: 0.35, delay: 0.05 }}
               className="relative mx-auto w-full max-w-sm"
             >
-              <GlassCard strong className="relative aspect-[9/16] overflow-hidden p-0 shadow-lift">
+              <GlassCard
+                strong
+                className="relative aspect-[9/16] overflow-hidden rounded-[1.6rem] p-0 shadow-lift"
+              >
                 {videos[0] ? (
                   <Link to={`/video/${videos[0].video.id}`} className="block h-full w-full">
                     <img
@@ -103,22 +106,27 @@ export function Landing() {
                       className="h-full w-full object-cover"
                       loading="eager"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
-                    <div className="absolute inset-x-0 bottom-0 flex items-end gap-3 p-5 text-white">
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/40" />
+                    <div className="absolute inset-x-0 bottom-0 flex items-center gap-3 p-5">
                       <Avatar
                         src={videos[0].author.avatarUrl}
                         name={videos[0].author.displayName}
                         size="md"
                       />
                       <div className="min-w-0 flex-1">
-                        <p className="truncate font-semibold">@{videos[0].author.username}</p>
-                        <p className="line-clamp-2 text-sm text-white/80">
+                        <p className="truncate font-medium text-foreground">
+                          @{videos[0].author.username}
+                        </p>
+                        <p className="line-clamp-2 text-sm text-muted-foreground">
                           {videos[0].video.caption}
                         </p>
                       </div>
-                      <span className="flex items-center gap-1 text-sm">
-                        <Play className="size-4" aria-hidden="true" /> {videos[0].counts.views}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                        <span className="tabular-nums text-sm font-medium">
+                          {videos[0].counts.views.toLocaleString()}
+                        </span>
+                      </div>
                     </div>
                   </Link>
                 ) : isLoading ? (
@@ -135,7 +143,7 @@ export function Landing() {
           </ResponsiveContainer>
         </section>
 
-        <section className="border-y border-border/60 bg-card/40 px-4 py-14 sm:px-6">
+        <section className="border-y border-glass-border bg-glass px-4 py-14 backdrop-blur-md sm:px-6">
           <ResponsiveContainer width="xl" className="py-0">
             <div className="grid gap-4 sm:grid-cols-3">
               {benefits.map(({ icon: Icon, title, copy }) => (
@@ -151,14 +159,9 @@ export function Landing() {
 
         <section className="px-4 py-16 sm:px-6">
           <ResponsiveContainer width="xl" className="py-0">
-            <div className="mb-6 flex items-end justify-between gap-4">
-              <div>
-                <p className="text-label font-semibold uppercase tracking-widest text-brand">
-                  Live now
-                </p>
-                <h2 className="mt-2 font-display text-2xl font-bold sm:text-3xl">
-                  Trending on Kiddo
-                </h2>
+            <div className="mb-6 flex items-end justify-between gap-6">
+              <div className="flex flex-col gap-1">
+                <h2 className="font-display text-2xl sm:text-3xl">Trending on Kiddo</h2>
               </div>
               <Button asChild variant="ghost" size="sm">
                 <Link to="/explore">See all</Link>
@@ -176,19 +179,22 @@ export function Landing() {
                   <Link
                     key={item.video.id}
                     to={`/video/${item.video.id}`}
-                    className="group relative aspect-[9/16] overflow-hidden rounded-2xl border border-glass-border"
+                    className="group relative aspect-[9/16] overflow-hidden rounded-xl border border-muted bg-muted"
                   >
                     <img
                       src={item.video.thumbnailUrl}
                       alt=""
-                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      className="h-full w-full object-cover transition-opacity duration-200 group-hover:opacity-80"
                       loading="lazy"
                     />
-                    <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-gradient-to-t from-black/75 to-transparent p-3 text-xs text-white">
-                      <span className="truncate">@{item.author.username}</span>
-                      <span className="flex items-center gap-1">
-                        <Heart className="size-3.5" aria-hidden="true" /> {item.counts.likes}
-                      </span>
+                    <div className="absolute inset-x-0 bottom-0 flex items-center justify-between bg-black/60 to-transparent px-3 py-2 text-xs">
+                      <span className="truncate font-medium">@{item.author.username}</span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                        <span className="tabular-nums text-foreground">
+                          {item.counts.likes.toLocaleString()}
+                        </span>
+                      </div>
                     </div>
                   </Link>
                 ))}
@@ -205,7 +211,7 @@ export function Landing() {
         </section>
       </main>
 
-      <footer className="border-t border-border/60 px-4 py-8 sm:px-6">
+      <footer className="border-t border-glass-border px-4 py-8 sm:px-6">
         <ResponsiveContainer
           width="xl"
           className="flex flex-col items-center justify-between gap-4 py-0 sm:flex-row"

@@ -3,7 +3,7 @@ import { lazy, Suspense, type ComponentType, type ReactNode } from 'react';
 import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-dom';
 import { AuthGateProvider } from '@/components/auth-gate';
 import { AuthProvider } from '@/components/auth-provider';
-import { Layout } from '@/components/layout';
+import { AppShell } from '@/components/layout';
 import { PlaybackSettingsProvider } from '@/components/playback-settings';
 import { ProtectedRoute } from '@/components/protected-route';
 import { RouteErrorBoundary } from '@/components/route-error-boundary';
@@ -29,6 +29,7 @@ const Profile = lazyNamed(() => import('@/pages/Profile'), 'Profile');
 const Settings = lazyNamed(() => import('@/pages/Settings'), 'Settings');
 const Upload = lazyNamed(() => import('@/pages/Upload'), 'Upload');
 const MyProfile = lazyNamed(() => import('@/pages/MyProfile'), 'MyProfile');
+const Saved = lazyNamed(() => import('@/pages/Saved'), 'Saved');
 const Login = lazyNamed(() => import('@/pages/Login'), 'Login');
 const Signup = lazyNamed(() => import('@/pages/Signup'), 'Signup');
 const VerifyEmail = lazyNamed(() => import('@/pages/VerifyEmail'), 'VerifyEmail');
@@ -69,6 +70,13 @@ function ShareRedirect() {
   return <Navigate to={`/video/${videoId}`} replace />;
 }
 
+/** `/@username` is a single path segment; validate the @ before rendering a profile. */
+function HandleRoute() {
+  const { handle = '' } = useParams();
+  if (!handle.startsWith('@') || handle.length < 2) return <NotFound />;
+  return <Profile />;
+}
+
 export function App() {
   return (
     <ThemeProvider>
@@ -79,25 +87,26 @@ export function App() {
               <BrowserRouter>
                 <Routes>
                   <Route path="welcome" element={page(<Landing />)} />
-                  <Route element={<Layout />}>
+                  <Route path="login" element={page(<Login />)} />
+                  <Route path="signup" element={page(<Signup />)} />
+                  <Route path="verify-email" element={page(<VerifyEmail />)} />
+                  <Route path="forgot-password" element={page(<ForgotPassword />)} />
+                  <Route path="reset-password" element={page(<ResetPassword />)} />
+                  <Route element={<AppShell />}>
                     <Route index element={page(<ForYou />)} />
                     <Route path="following" element={page(<Following />)} />
                     <Route path="explore" element={page(<Explore />)} />
                     <Route path="search" element={page(<SearchPage />)} />
                     <Route path="tag/:tag" element={page(<Tag />)} />
                     <Route path="video/:id" element={page(<VideoDetail />)} />
-                    <Route path="@:username" element={page(<Profile />)} />
-                    <Route path="login" element={page(<Login />)} />
-                    <Route path="signup" element={page(<Signup />)} />
-                    <Route path="verify-email" element={page(<VerifyEmail />)} />
-                    <Route path="forgot-password" element={page(<ForgotPassword />)} />
-                    <Route path="reset-password" element={page(<ResetPassword />)} />
+                    <Route path=":handle" element={page(<HandleRoute />)} />
                     <Route path="videos/:id" element={<LegacyVideoRedirect />} />
                     <Route path="s/:videoId" element={<ShareRedirect />} />
                     <Route element={<ProtectedRoute />}>
                       <Route path="upload" element={page(<Upload />)} />
                       <Route path="settings" element={page(<Settings />)} />
                       <Route path="profile" element={page(<MyProfile />)} />
+                      <Route path="saved" element={page(<Saved />)} />
                       <Route path="notifications" element={page(<NotificationsPage />)} />
                     </Route>
                     <Route path="*" element={page(<NotFound />)} />

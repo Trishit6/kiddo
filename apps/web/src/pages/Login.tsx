@@ -8,6 +8,7 @@ import { AuthFooter, AuthShell } from '@/components/auth-shell';
 import { useAuth } from '@/components/auth-provider';
 import { GoogleSignInButton } from '@/components/google-sign-in-button';
 import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 import {
   Form,
   FormControl,
@@ -81,7 +82,11 @@ export function Login() {
                 <div className="flex items-center justify-between">
                   <FormLabel>Password</FormLabel>
                   <Link
-                    className="text-xs font-medium text-brand hover:underline"
+                    className={cn(
+                      'text-xs font-medium',
+                      'dark:text-brand-foreground',
+                      'light:text-brand',
+                    )}
                     to="/forgot-password"
                   >
                     Forgot password?
@@ -95,16 +100,28 @@ export function Login() {
             )}
           />
           {error ? (
-            <p role="alert" className="rounded-xl bg-destructive/10 p-3 text-sm text-destructive">
+            <p
+              role="alert"
+              className={cn(
+                'rounded-xl bg-destructive/10 p-3 text-sm',
+                'dark:text-destructive',
+                'light:text-destructive-foreground',
+              )}
+            >
+              {' '}
               {error}
             </p>
           ) : null}
-          <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+          <Button
+            type="submit"
+            className={cn('w-full', 'dark:bg-brand', 'light:bg-primary')}
+            disabled={form.formState.isSubmitting}
+          >
             {form.formState.isSubmitting ? 'Logging in…' : 'Log in'}
           </Button>
         </form>
       </Form>
-      <div className="mt-6">
+      <div className={cn('mt-6', 'dark:bg-glass-bg/20', 'light:bg-background')}>
         <GoogleSignInButton onCredential={google} />
       </div>
     </AuthShell>

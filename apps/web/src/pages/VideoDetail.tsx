@@ -23,6 +23,10 @@ export function VideoDetail() {
   const [commentsOpen, setCommentsOpen] = useState(false);
 
   const item = feedItem.data?.item;
+  const captionText = (item?.video.caption ?? '')
+    .replace(/#[A-Za-z0-9_]+/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
   const more = useProfileVideos(item?.author.username ?? '');
   const moreItems =
     more.data?.pages.flatMap((page) => page.items).filter((entry) => entry.video.id !== id) ?? [];
@@ -30,7 +34,7 @@ export function VideoDetail() {
   if (video.isPending) {
     return (
       <div className="grid h-full place-items-center bg-black">
-        <Skeleton className="h-full w-full max-w-sm bg-white/5 md:h-[calc(100dvh-2rem)] md:w-[calc((100dvh-2rem)*9/16)] md:rounded-2xl" />
+        <Skeleton className="h-full w-full max-w-sm bg-white/5 md:aspect-[9/16] md:h-full md:w-auto md:rounded-[1.5rem]" />
       </div>
     );
   }
@@ -126,7 +130,7 @@ export function VideoDetail() {
         </div>
 
         <div className="flex flex-1 items-center justify-center bg-black/90 p-0 md:p-4">
-          <div className="relative h-full w-full md:h-[calc(100dvh-5rem)] md:w-[calc((100dvh-5rem)*9/16)] md:max-w-full md:rounded-2xl md:shadow-lift">
+          <div className="relative h-full w-full md:aspect-[9/16] md:h-full md:w-auto md:max-w-full md:rounded-[1.5rem] md:shadow-lift">
             <FeedPlayer
               src={item.video.hlsUrl}
               poster={item.video.thumbnailUrl}
@@ -142,7 +146,7 @@ export function VideoDetail() {
               onClick={(event) => event.stopPropagation()}
             >
               <div className="min-w-0 space-y-1 text-white">
-                <p className="line-clamp-3 text-sm">{item.video.caption || 'No caption'}</p>
+                <p className="line-clamp-3 text-sm">{captionText || 'No caption'}</p>
                 {item.video.hashtags.length > 0 ? (
                   <p className="flex flex-wrap gap-x-2 text-sm font-semibold">
                     {item.video.hashtags.map((tag) => (

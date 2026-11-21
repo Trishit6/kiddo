@@ -4,8 +4,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* Design tokens (see docs/web-design.md). Dark is the primary theme; light is a
-   first-class alternative. Components must use these tokens, never raw values. */
+   first-class alternative. Components must use these tokens, never raw values.
+   Identity: floating sage-green glass over a deep charcoal canvas. */
 @theme {
+  --spacing: 0.25rem;
   --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
   --font-display:
     'Bricolage Grotesque Variable', 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
@@ -22,8 +24,15 @@
 
   --radius-pill: 999px;
 
-  --shadow-soft: 0 1px 2px rgb(0 0 0 / 6%), 0 12px 32px rgb(0 0 0 / 8%);
-  --shadow-lift: 0 24px 70px rgb(0 0 0 / 35%);
+  /* Breakpoints are declared explicitly so responsive behaviour has one source. */
+  --breakpoint-sm: 40rem;
+  --breakpoint-md: 48rem;
+  --breakpoint-lg: 64rem;
+  --breakpoint-xl: 80rem;
+  --breakpoint-2xl: 96rem;
+
+  --shadow-soft: 0 1px 2px rgb(16 25 22 / 8%), 0 14px 34px rgb(16 25 22 / 10%);
+  --shadow-lift: 0 26px 70px rgb(6 12 9 / 38%);
 
   --ease-snap: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -119,6 +128,8 @@
   --color-glass: var(--glass-bg);
   --color-glass-strong: var(--glass-bg-strong);
   --color-glass-border: var(--glass-border);
+  --color-glass-highlight: var(--glass-highlight);
+  --color-app-surface: var(--app-surface);
   --shadow-glass: var(--glass-shadow);
   --blur-glass: var(--glass-blur);
   --radius-sm: calc(var(--radius) - 4px);
@@ -141,16 +152,9 @@
     min-height: 100dvh;
     overscroll-behavior-y: none;
     background-image:
-      radial-gradient(
-        circle at 15% -10%,
-        color-mix(in oklab, var(--brand) 14%, transparent),
-        transparent 42%
-      ),
-      radial-gradient(
-        circle at 85% 10%,
-        color-mix(in oklab, var(--accent-pink) 10%, transparent),
-        transparent 38%
-      );
+      radial-gradient(1200px 760px at 6% -14%, var(--ambient-one), transparent 62%),
+      radial-gradient(980px 700px at 98% 2%, var(--ambient-two), transparent 58%),
+      linear-gradient(168deg, var(--background) 0%, var(--background-deep) 100%);
     background-attachment: fixed;
   }
 
@@ -167,25 +171,41 @@
 @utility glass {
   background-color: var(--glass-bg);
   border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow:
+    var(--glass-shadow),
+    inset 0 1px 0 var(--glass-highlight);
+  backdrop-filter: blur(var(--glass-blur)) saturate(125%);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(125%);
+}
+
+@utility app-surface {
+  background-color: var(--app-surface);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    var(--glass-shadow),
+    inset 0 1px 0 var(--glass-highlight);
+  backdrop-filter: blur(calc(var(--glass-blur) * 1.4)) saturate(130%);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.4)) saturate(130%);
 }
 
 @utility glass-strong {
   background-color: var(--glass-bg-strong);
   border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(calc(var(--glass-blur) * 1.4));
-  -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.4));
+  box-shadow:
+    var(--glass-shadow),
+    inset 0 1px 0 var(--glass-highlight);
+  backdrop-filter: blur(calc(var(--glass-blur) * 1.4)) saturate(125%);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.4)) saturate(125%);
 }
 
 @utility glass-nav {
-  background-color: var(--glass-bg);
+  background-color: var(--glass-bg-strong);
   border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
-  backdrop-filter: blur(calc(var(--glass-blur) * 1.6));
-  -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.6));
+  box-shadow:
+    var(--glass-shadow),
+    inset 0 1px 0 var(--glass-highlight);
+  backdrop-filter: blur(calc(var(--glass-blur) * 1.8)) saturate(130%);
+  -webkit-backdrop-filter: blur(calc(var(--glass-blur) * 1.8)) saturate(130%);
 }
 
 @utility no-scrollbar {
